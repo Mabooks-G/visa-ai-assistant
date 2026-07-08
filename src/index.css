@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Lato", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: "EB Garamond", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --color-primary: oklch(0.2077 0.0398 265.75);
+  --color-on-primary: oklch(1.0 0 0);
+  --color-secondary: oklch(0.3717 0.0392 257.29);
+  --color-accent: oklch(0.5 0.1193 242.75);
+  --color-background: oklch(0.9842 0.0034 247.86);
+  --color-foreground: oklch(0.1288 0.0406 264.7);
+  --color-muted: oklch(0.9415 0.008 253.85);
+  --color-border: oklch(0.9288 0.0126 255.51);
+  --color-destructive: oklch(0.5771 0.2152 27.33);
+  --color-ring: oklch(0.2077 0.0398 265.75);
+}
+
+/* Base styles */
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Smooth transitions on interactive elements */
+a, button, input, select, textarea {
+  transition: all 200ms ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
