@@ -11,10 +11,12 @@ import json
 import logging
 from typing import Optional
 
+from backend.config import settings
+
 logger = logging.getLogger(__name__)
 
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
-MODEL_NAME = os.getenv("GOOGLE_MODEL", "gemma-4")
+GOOGLE_API_KEY = settings.GOOGLE_API_KEY or os.getenv("GOOGLE_API_KEY", "")
+MODEL_NAME = settings.GOOGLE_MODEL or os.getenv("GOOGLE_MODEL", "gemma-4-26b-a4b-it")
 MAX_OUTPUT_TOKENS = int(os.getenv("GEMMA_MAX_OUTPUT_TOKENS", "512"))
 
 _client = None

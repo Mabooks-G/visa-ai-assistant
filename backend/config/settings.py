@@ -24,7 +24,8 @@ PORT = int(os.getenv('PORT', '8000'))
 
 # Google AI / Gemma API
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY', '')
-GOOGLE_MODEL = os.getenv('GOOGLE_MODEL', 'gemma-4')
+print(f"[debug] GOOGLE_API_KEY loaded: len={len(GOOGLE_API_KEY)}, starts_with={GOOGLE_API_KEY[:15] if GOOGLE_API_KEY else 'EMPTY'}", file=sys.stderr)
+GOOGLE_MODEL = os.getenv('GOOGLE_MODEL', 'gemma-4-26b-a4b-it')
 
 # Upload limits
 UPLOAD_MAX_SIZE = 10 * 1024 * 1024  # 10 MB
