@@ -19,7 +19,8 @@ SUPABASE_ANON_KEY = os.getenv(
 # App
 DATABASE_URL = os.getenv('DATABASE_URL', '')
 SECRET_KEY = os.getenv('SECRET_KEY', 'visa-ai-secret-dev-key-change-in-production')
-CORS_ORIGINS = os.getenv('CORS_ORIGINS', '*').split(',')
+CORS_ORIGINS = os.getenv('CORS_ORIGINS', '*')
+CORS_ORIGINS = [o.strip() for o in CORS_ORIGINS.split(',') if o.strip()]
 PORT = int(os.getenv('PORT', '8000'))
 
 # Google AI / Gemma API
