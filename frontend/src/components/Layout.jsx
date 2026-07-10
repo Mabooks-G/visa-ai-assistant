@@ -5,7 +5,6 @@ import { LayoutDashboard, Upload, FileCheck, Shield, Menu, X } from 'lucide-reac
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/upload', label: 'Upload Documents', icon: Upload },
-  { to: '/dashboard', label: 'My Results', icon: FileCheck },
   { to: '/admin', label: 'Admin Panel', icon: Shield },
 ]
 

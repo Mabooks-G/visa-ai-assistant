@@ -39,13 +39,14 @@ export default function Dashboard() {
   const loadApplications = async () => {
     try {
       const data = await getApplications()
-      if (data) {
-        setApplications(data)
+      const apps = Array.isArray(data) ? data : (data.applications || [])
+      if (apps) {
+        setApplications(apps)
         setStats({
-          total: data.length,
-          inProgress: data.filter(a => a.status === 'in_progress').length,
-          verified: data.filter(a => a.status === 'verified').length,
-          rejected: data.filter(a => a.status === 'rejected').length,
+          total: apps.length,
+          inProgress: apps.filter(a => a.status === 'in_progress').length,
+          verified: apps.filter(a => a.status === 'verified').length,
+          rejected: apps.filter(a => a.status === 'rejected').length,
         })
       }
     } catch (err) {
