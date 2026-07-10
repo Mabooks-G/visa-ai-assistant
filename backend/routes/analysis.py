@@ -153,9 +153,10 @@ async def run_full_analysis(
             if doc_id:
                 classification_data = {
                     "document_id": doc_id,
-                    "document_type": entry["document_type"],
+                    "classified_as": entry.get("document_type", entry.get("classified_as", "unknown")),
                     "confidence": entry["confidence"],
-                    "summary": entry["summary"],
+                    "summary": entry.get("summary", ""),
+                    "issues": entry.get("issues", []),
                     "issuing_country": entry.get("issuing_country", "unknown"),
                 }
                 existing = sb.table("document_classifications").select("id").eq("document_id", doc_id).execute()

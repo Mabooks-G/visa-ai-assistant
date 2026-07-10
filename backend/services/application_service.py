@@ -111,9 +111,13 @@ def get_application_with_documents(app_id: str) -> dict:
         class_result = sb.table('document_classifications') \
             .select('*') \
             .eq('document_id', doc['id']) \
+            .order('created_at', desc=True) \
             .limit(1) \
             .execute()
-        doc['classification'] = class_result.data[0] if class_result.data else None
+        classification = class_result.data[0] if class_result.data else None
+        doc['classification'] = classification
+        # Also expose as an array for frontend compatibility
+        doc['document_classifications'] = [classification] if classification else []
 
     app['documents'] = docs
     return app

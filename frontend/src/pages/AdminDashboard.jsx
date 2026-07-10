@@ -40,17 +40,21 @@ export default function AdminDashboard() {
   }, [search, statusFilter, applications])
 
   const loadApplications = async () => {
-    const { data, error } = await adminListApplications()
-
-    if (!error && data) {
-      setApplications(data)
-      setFiltered(data)
-      setStats({
-        total: data.length,
-        needsReview: data.filter(a => a.status === 'needs_review').length,
-        verified: data.filter(a => a.status === 'verified').length,
-        rejected: data.filter(a => a.status === 'rejected').length,
-      })
+    try {
+      const data = await adminListApplications()
+      if (data) {
+        const apps = Array.isArray(data) ? data : []
+        setApplications(apps)
+        setFiltered(apps)
+        setStats({
+          total: apps.length,
+          needsReview: apps.filter(a => a.status === 'needs_review').length,
+          verified: apps.filter(a => a.status === 'verified').length,
+          rejected: apps.filter(a => a.status === 'rejected').length,
+        })
+      }
+    } catch (err) {
+      console.error('Failed to load applications:', err)
     }
     setLoading(false)
   }

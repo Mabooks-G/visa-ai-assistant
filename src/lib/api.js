@@ -44,8 +44,8 @@ async function request(method, path, options = {}) {
 
 export async function login(email, password) {
   const data = await request('POST', '/auth/login', { body: { email, password } });
-  if (data.access_token) {
-    localStorage.setItem('visa_access_token', data.access_token);
+  if (data.token) {
+    localStorage.setItem('visa_access_token', data.token);
   }
   return data;
 }
@@ -54,6 +54,9 @@ export async function register(email, password, name, userType = 'applicant') {
   const data = await request('POST', '/auth/register', {
     body: { email, password, name, user_type: userType },
   });
+  if (data.token) {
+    localStorage.setItem('visa_access_token', data.token);
+  }
   return data;
 }
 
@@ -91,7 +94,9 @@ export async function deleteApplication(id) {
 
 export async function uploadDocument(formData) {
   const token = localStorage.getItem('visa_access_token');
-  const url = `${API_BASE}/documents/upload`;
+  const appId = formData.get('application_id');
+  if (!appId) throw new Error('application_id is required in FormData');
+  const url = `${API_BASE}/applications/${appId}/documents/upload`;
   const response = await fetch(url, {
     method: 'POST',
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
@@ -105,8 +110,9 @@ export async function uploadDocument(formData) {
 }
 
 export async function getDocuments(applicationId = null) {
-  const path = applicationId ? `/documents?application_id=${applicationId}` : '/documents';
-  return request('GET', path);
+  if (!applicationId) throw new Error('applicationId is required');
+  const data = await request('GET', `/applications/${applicationId}/documents`);
+  return data.documents;
 }
 
 export async function getDocument(id) {

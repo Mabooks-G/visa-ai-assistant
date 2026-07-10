@@ -1,6 +1,6 @@
 """Application & Document CRUD routes."""
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form
 from pydantic import BaseModel
 
 from backend.middleware.auth import get_current_user
@@ -102,6 +102,27 @@ async def api_update_application(
     current_user: dict = Depends(get_current_user),
 ):
     """Update an application's fields."""
+    app = get_application(app_id)
+    if not app:
+        raise HTTPException(status_code=404, detail='Application not found')
+    if str(app.get('userid', '')) != str(current_user['id']):
+        raise HTTPException(status_code=403, detail='Access denied')
+
+    data = body.model_dump(exclude_none=True)
+    try:
+        updated = update_application(app_id, data)
+        return updated
+    except (ValueError, RuntimeError) as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.put('/applications/{app_id}')
+async def api_update_application_put(
+    app_id: str,
+    body: UpdateAppRequest,
+    current_user: dict = Depends(get_current_user),
+):
+    """Alias for PATCH — update an application's fields."""
     app = get_application(app_id)
     if not app:
         raise HTTPException(status_code=404, detail='Application not found')

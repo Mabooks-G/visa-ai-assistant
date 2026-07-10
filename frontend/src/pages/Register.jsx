@@ -32,6 +32,8 @@ export default function Register() {
     try {
       await register(email, password, '', 'applicant')
       setSuccess(true)
+      // Auto-redirect to dashboard after a brief moment
+      setTimeout(() => navigate('/dashboard'), 1200)
     } catch (err) {
       setError(err.message || 'Registration failed')
     } finally {
@@ -46,17 +48,12 @@ export default function Register() {
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-green-100">
             <CheckCircle size={32} className="text-green-600" />
           </div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Check your email</h1>
+          <h1 className="font-heading text-2xl font-bold text-foreground">Account created!</h1>
           <p className="mt-2 text-secondary">
-            We've sent a confirmation link to <strong className="text-foreground">{email}</strong>.
-            Please check your inbox and click the link to activate your account.
+            You're all set, <strong className="text-foreground">{email}</strong>.
+            Redirecting you to your dashboard...
           </p>
-          <Link
-            to="/login"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-accent/90 active:scale-[0.97]"
-          >
-            Go to Sign In
-          </Link>
+          <div className="mt-6 inline-flex h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" />
         </div>
       </div>
     )
