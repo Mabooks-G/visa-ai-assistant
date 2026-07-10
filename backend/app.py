@@ -17,9 +17,11 @@ app = FastAPI(
 )
 
 # ── CORS ───────────────────────────────────────────────────────────────────
+# Use ['*'] so the middleware reflects the actual origin back in the response.
+# This works both locally and when accessed over the network (e.g. 165.245.135.33:5173).
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
