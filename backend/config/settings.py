@@ -3,9 +3,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Debug: check which .env was loaded
+import sys
+print(f"[debug] CWD for load_dotenv: {os.getcwd()}", file=sys.stderr)
+
 # Supabase
 SUPABASE_URL = os.getenv('SUPABASE_URL', 'https://yuzcgqgojznjrimggfbo.supabase.co')
 SUPABASE_SERVICE_KEY = os.getenv('SUPABASE_SERVICE_KEY', '')
+print(f"[debug] SUPABASE_SERVICE_KEY loaded: len={len(SUPABASE_SERVICE_KEY)}, starts_with={SUPABASE_SERVICE_KEY[:10] if SUPABASE_SERVICE_KEY else 'EMPTY'}", file=sys.stderr)
 SUPABASE_ANON_KEY = os.getenv(
     'SUPABASE_ANON_KEY',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1emNncWdvanpuanJpbWdnZmJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDM2NjgsImV4cCI6MjA5OTA3OTY2OH0.fVTlR0s80Zq4s4JmY8pjNsMmp3swzjLiIV46jrVHb88'
