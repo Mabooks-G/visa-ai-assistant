@@ -3,7 +3,13 @@
  * All requests are routed through the FastAPI backend, not directly to Supabase.
  */
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+/**
+ * Use the same hostname the page was loaded from, on port 8000.
+ * This works both locally and when accessing the server over the network.
+ * Set VITE_API_URL to override (e.g. in production).
+ */
+const API_HOST = window.location.hostname;
+const API_BASE = import.meta.env.VITE_API_URL || `http://${API_HOST}:8000/api`;
 
 async function request(method, path, options = {}) {
   const url = `${API_BASE}${path}`;
