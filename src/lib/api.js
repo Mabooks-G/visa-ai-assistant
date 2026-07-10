@@ -145,6 +145,20 @@ export async function getRequirementsFor(country, visaType) {
   return request('GET', `/analyze/requirements/${country}/${visaType}`);
 }
 
+// ── Queries (User-to-Admin Q&A) ─────────────────────────────────────────
+
+export async function createQuery(applicationId, message) {
+  return request('POST', '/queries', { body: { application_id: applicationId, message } });
+}
+
+export async function getQueries(applicationId) {
+  return request('GET', `/queries/${applicationId}`);
+}
+
+export async function replyToQuery(queryId, reply) {
+  return request('PUT', `/queries/${queryId}`, { body: { reply } });
+}
+
 // ── Admin ───────────────────────────────────────────────────────────────
 
 export async function adminListApplications() {
@@ -153,6 +167,31 @@ export async function adminListApplications() {
 
 export async function adminReanalyze(applicationId) {
   return request('POST', `/admin/analyze/${applicationId}/reanalyze`);
+}
+
+export async function adminGetRequirements() {
+  return request('GET', '/admin/requirements');
+}
+
+export async function adminUpsertRequirement(country, visaType, requirements) {
+  return request('PUT', '/admin/requirements', { body: { country, visa_type: visaType, requirements } });
+}
+
+export async function adminDeleteRequirement(overrideId) {
+  return request('DELETE', `/admin/requirements/${overrideId}`);
+}
+
+export async function adminListQueries(statusFilter) {
+  const query = statusFilter ? `?status=${statusFilter}` : '';
+  return request('GET', `/admin/queries${query}`);
+}
+
+export async function adminGetDemoData() {
+  return request('GET', '/admin/demo-data');
+}
+
+export async function adminSeedDemoData() {
+  return request('POST', '/admin/seed-demo');
 }
 
 // ── Health ──────────────────────────────────────────────────────────────

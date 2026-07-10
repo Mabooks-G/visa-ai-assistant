@@ -14,6 +14,8 @@ def create_application(
     visa_type: str,
     applicant_name: str | None = None,
     passport_number: str | None = None,
+    origin_country: str | None = None,
+    destination_country: str | None = None,
 ) -> dict:
     """Create a new visa application for a user."""
     sb = get_supabase()
@@ -23,6 +25,8 @@ def create_application(
         'status': 'in_progress',
         'applicant_name': applicant_name or '',
         'passport_number': passport_number or '',
+        'origin_country': origin_country or '',
+        'destination_country': destination_country or '',
         'overall_score': 0,
     }).execute()
 
@@ -57,7 +61,8 @@ def get_application(app_id: str) -> dict | None:
 
 def update_application(app_id: str, data: dict) -> dict:
     """Update fields on an application."""
-    allowed = {'visa_type', 'status', 'applicant_name', 'passport_number', 'overall_score'}
+    allowed = {'visa_type', 'status', 'applicant_name', 'passport_number',
+               'origin_country', 'destination_country', 'overall_score'}
     payload = {k: v for k, v in data.items() if k in allowed}
 
     if not payload:

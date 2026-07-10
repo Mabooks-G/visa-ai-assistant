@@ -31,6 +31,8 @@ class CreateAppRequest(BaseModel):
     visa_type: str
     applicant_name: str | None = None
     passport_number: str | None = None
+    origin_country: str | None = None
+    destination_country: str | None = None
 
 
 class UpdateAppRequest(BaseModel):
@@ -39,6 +41,9 @@ class UpdateAppRequest(BaseModel):
     applicant_name: str | None = None
     passport_number: str | None = None
     overall_score: int | None = None
+    origin_country: str | None = None
+    destination_country: str | None = None
+    ai_summary: str | None = None
 
 
 class CreateDocRequest(BaseModel):
@@ -66,6 +71,8 @@ async def api_create_application(
             visa_type=body.visa_type,
             applicant_name=body.applicant_name,
             passport_number=body.passport_number,
+            origin_country=body.origin_country,
+            destination_country=body.destination_country,
         )
         return app
     except (ValueError, RuntimeError) as e:
@@ -151,6 +158,41 @@ async def api_delete_application(
 
     delete_application(app_id, current_user['id'])
     return {'message': 'Application deleted'}
+
+
+# ── File upload endpoint ─────────────────────────────────────────────────────
+
+import base64
+
+@router.post('/applications/{app_id}/documents/upload')
+async def api_upload_document_file(
+    app_id: str,
+    file: UploadFile = File(...),
+    document_type: str = Form(''),
+    current_user: dict = Depends(get_current_user),
+):
+    """Upload a document file to an application."""
+    app = get_application(app_id)
+    if not app:
+        raise HTTPException(status_code=404, detail='Application not found')
+    if str(app.get('userid', '')) != str(current_user['id']):
+        raise HTTPException(status_code=403, detail='Access denied')
+
+    file_bytes = await file.read()
+    file_b64 = base64.b64encode(file_bytes).decode('utf-8')
+
+    try:
+        doc = create_document(
+            application_id=app_id,
+            file_name=file.filename or 'uploaded_file',
+            document_type=document_type or '',
+        )
+        # Store file contents as base64 in the document record
+        update_document(doc['id'], {'File_contents': file_b64})
+        doc['File_contents'] = file_b64
+        return doc
+    except RuntimeError as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ── Document endpoints (scoped under an application) ────────────────────────
