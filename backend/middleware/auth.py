@@ -41,3 +41,7 @@ async def get_admin_user(
     if current_user.get('user_type') != 'admin':
         raise HTTPException(status_code=403, detail='Admin access required')
     return current_user
+
+
+# Alias used by routes
+admin_required = get_admin_user
