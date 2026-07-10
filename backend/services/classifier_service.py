@@ -9,7 +9,7 @@ import re
 import logging
 from typing import Optional
 
-from services.gemma_service import classify_document as gemma_classify
+from backend.services.gemma_service import classify_document as gemma_classify
 
 logger = logging.getLogger(__name__)
 
