@@ -17,9 +17,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'visa-ai-secret-dev-key-change-in-productio
 CORS_ORIGINS = os.getenv('CORS_ORIGINS', '*').split(',')
 PORT = int(os.getenv('PORT', '8000'))
 
-# GPU / Model
-MODEL_NAME = os.getenv('MODEL_NAME', 'google/gemma-2-2b-it')
-HF_TOKEN = os.getenv('HF_TOKEN', '')
+# Google AI / Gemma API
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY', '')
+GOOGLE_MODEL = os.getenv('GOOGLE_MODEL', 'gemma-4')
 
 # Upload limits
 UPLOAD_MAX_SIZE = 10 * 1024 * 1024  # 10 MB
