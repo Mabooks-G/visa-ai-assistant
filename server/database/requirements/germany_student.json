@@ -1,0 +1,31 @@
+{
+    "visa_type": "germany_student",
+    "country": "Germany",
+    "visa_category": "Student",
+    "description": "Germany Student Visa (Studium)",
+    "processing_time": "2-3 months",
+    "required_documents": [
+        "passport",
+        "acceptance_letter",
+        "academic_transcript",
+        "bank_statement",
+        "health_insurance"
+    ],
+    "optional_documents": [
+        "proof_of_address",
+        "language_proficiency",
+        "motivation_letter"
+    ],
+    "financial_requirements": {
+        "min_balance": 11208,
+        "currency": "EUR",
+        "notes": "Blocked account required (approx. €934/month for 12 months)"
+    },
+    "eligibility_criteria": [
+        "University admission letter",
+        "Proof of sufficient funds (blocked account)",
+        "Health insurance coverage",
+        "Language proficiency (German or English)",
+        "Valid passport"
+    ]
+}

@@ -13,5 +13,13 @@ export default defineConfig({
     alias: {
       '@': '/src',
     },
+    conditions: ['development', 'browser'],
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./test/setup.ts",
+    include: ["test/**/*.test.ts", "test/**/*.test.tsx"],
+    css: true,
   },
 })

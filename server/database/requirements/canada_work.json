@@ -1,0 +1,30 @@
+{
+    "visa_type": "canada_work",
+    "country": "Canada",
+    "visa_category": "Work",
+    "description": "Canada Work Visa (Temporary Foreign Worker Program)",
+    "processing_time": "3-6 months",
+    "required_documents": [
+        "passport",
+        "employment_letter",
+        "bank_statement",
+        "work_permit_application"
+    ],
+    "optional_documents": [
+        "proof_of_address",
+        "id_card",
+        "travel_history"
+    ],
+    "financial_requirements": {
+        "min_balance": 2500,
+        "currency": "CAD",
+        "notes": "Sufficient funds to support yourself and family"
+    },
+    "eligibility_criteria": [
+        "Valid job offer from Canadian employer",
+        "Labor Market Impact Assessment (LMIA) if required",
+        "Proof of relevant work experience",
+        "Language proficiency (English/French)",
+        "No criminal record"
+    ]
+}

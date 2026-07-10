@@ -1,150 +1,154 @@
-import { supabase } from './supabase'
+/**
+ * API client for the Visa AI Assistant backend.
+ * All requests are routed through the FastAPI backend, not directly to Supabase.
+ */
 
-// ========================
-// Visa Applications
-// ========================
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+
+async function request(method, path, options = {}) {
+  const url = `${API_BASE}${path}`;
+  const token = localStorage.getItem('visa_access_token');
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...options.headers,
+  };
+
+  const config = {
+    method,
+    headers,
+  };
+
+  if (options.body) {
+    config.body = JSON.stringify(options.body);
+  }
+
+  const response = await fetch(url, config);
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ detail: response.statusText }));
+    throw new Error(errorData.detail || `Request failed: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// ── Auth ─────────────────────────────────────────────────────────────────
+
+export async function login(email, password) {
+  const data = await request('POST', '/auth/login', { body: { email, password } });
+  if (data.access_token) {
+    localStorage.setItem('visa_access_token', data.access_token);
+  }
+  return data;
+}
+
+export async function register(email, password, name, userType = 'applicant') {
+  const data = await request('POST', '/auth/register', {
+    body: { email, password, name, user_type: userType },
+  });
+  return data;
+}
+
+export async function logout() {
+  localStorage.removeItem('visa_access_token');
+}
+
+export async function getCurrentUser() {
+  return request('GET', '/auth/me');
+}
+
+// ── Applications ────────────────────────────────────────────────────────
 
 export async function createApplication(applicationData) {
-  const { data, error } = await supabase
-    .from('visa_applications')
-    .insert([applicationData])
-    .select()
-    .single()
-  return { data, error }
+  return request('POST', '/applications', { body: applicationData });
 }
 
 export async function getApplications() {
-  const { data, error } = await supabase
-    .from('visa_applications')
-    .select('*')
-    .order('created_at', { ascending: false })
-  return { data, error }
+  return request('GET', '/applications');
 }
 
 export async function getApplication(id) {
-  const { data, error } = await supabase
-    .from('visa_applications')
-    .select('*')
-    .eq('id', id)
-    .single()
-  return { data, error }
+  return request('GET', `/applications/${id}`);
 }
 
-export async function updateApplication(id, updates) {
-  const { data, error } = await supabase
-    .from('visa_applications')
-    .update(updates)
-    .eq('id', id)
-    .select()
-    .single()
-  return { data, error }
+export async function updateApplication(id, data) {
+  return request('PUT', `/applications/${id}`, { body: data });
 }
 
 export async function deleteApplication(id) {
-  const { error } = await supabase
-    .from('visa_applications')
-    .delete()
-    .eq('id', id)
-  return { error }
+  return request('DELETE', `/applications/${id}`);
 }
 
-// ========================
-// Documents
-// ========================
+// ── Documents ───────────────────────────────────────────────────────────
 
-export async function uploadDocument(applicationId, file, documentType) {
-  // Upload file to storage
-  const filePath = `${applicationId}/${Date.now()}_${file.name}`
-  const { data: storageData, error: storageError } = await supabase.storage
-    .from('documents')
-    .upload(filePath, file)
-
-  if (storageError) return { error: storageError }
-
-  // Get public URL
-  const { data: { publicUrl } } = supabase.storage
-    .from('documents')
-    .getPublicUrl(filePath)
-
-  // Create document record
-  const { data, error } = await supabase
-    .from('documents')
-    .insert([{
-      application_id: applicationId,
-      file_name: file.name,
-      file_url: publicUrl,
-      document_type: documentType,
-      status: 'pending',
-    }])
-    .select()
-    .single()
-
-  return { data, error }
+export async function uploadDocument(formData) {
+  const token = localStorage.getItem('visa_access_token');
+  const url = `${API_BASE}/documents/upload`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: formData,
+  });
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ detail: response.statusText }));
+    throw new Error(errorData.detail || 'Upload failed');
+  }
+  return response.json();
 }
 
-export async function getDocuments(applicationId) {
-  const { data, error } = await supabase
-    .from('documents')
-    .select('*')
-    .eq('application_id', applicationId)
-    .order('created_at', { ascending: false })
-  return { data, error }
+export async function getDocuments(applicationId = null) {
+  const path = applicationId ? `/documents?application_id=${applicationId}` : '/documents';
+  return request('GET', path);
 }
 
 export async function getDocument(id) {
-  const { data, error } = await supabase
-    .from('documents')
-    .select('*, document_classifications(*)')
-    .eq('id', id)
-    .single()
-  return { data, error }
+  return request('GET', `/documents/${id}`);
 }
 
-// ========================
-// Document Classifications
-// ========================
-
-export async function getClassification(documentId) {
-  const { data, error } = await supabase
-    .from('document_classifications')
-    .select('*')
-    .eq('document_id', documentId)
-    .single()
-  return { data, error }
+export async function deleteDocument(id) {
+  return request('DELETE', `/documents/${id}`);
 }
 
-export async function getApplicationClassifications(applicationId) {
-  const { data, error } = await supabase
-    .from('document_classifications')
-    .select(`
-      *,
-      document:documents!inner(*)
-    `)
-    .eq('document.application_id', applicationId)
-  return { data, error }
+// ── Analysis ────────────────────────────────────────────────────────────
+
+export async function runFullAnalysis(applicationId) {
+  return request('POST', `/analyze/${applicationId}`);
 }
 
-// ========================
-// Stats / Dashboard
-// ========================
+export async function getAnalysisReport(applicationId) {
+  return request('GET', `/analyze/${applicationId}`);
+}
 
-export async function getDashboardStats() {
-  const { data: applications, error: appError } = await supabase
-    .from('visa_applications')
-    .select('*')
+export async function runOcrOnDocument(docId) {
+  return request('POST', `/analyze/${docId}/ocr`);
+}
 
-  if (appError) return { error: appError }
+export async function getAvailableRequirements() {
+  return request('GET', '/analyze/requirements');
+}
 
-  const total = applications?.length || 0
-  const inProgress = applications?.filter(a => a.status === 'in_progress').length || 0
-  const verified = applications?.filter(a => a.status === 'verified').length || 0
-  const rejected = applications?.filter(a => a.status === 'rejected').length || 0
-  const avgScore = applications?.length
-    ? Math.round(applications.reduce((sum, a) => sum + (a.overall_score || 0), 0) / applications.length)
-    : 0
+export async function getRequirementsFor(country, visaType) {
+  return request('GET', `/analyze/requirements/${country}/${visaType}`);
+}
 
-  return {
-    data: { total, inProgress, verified, rejected, avgScore },
-    error: null,
-  }
+// ── Admin ───────────────────────────────────────────────────────────────
+
+export async function adminListApplications() {
+  return request('GET', '/admin/analyze/applications');
+}
+
+export async function adminReanalyze(applicationId) {
+  return request('POST', `/admin/analyze/${applicationId}/reanalyze`);
+}
+
+// ── Health ──────────────────────────────────────────────────────────────
+
+export async function healthCheck() {
+  return request('GET', '/health');
+}
+
+export async function analysisHealth() {
+  return request('GET', '/analyze/health');
 }

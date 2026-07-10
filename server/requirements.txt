@@ -1,0 +1,10 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.3
+python-multipart==0.0.17
+supabase==2.6.0
+Pillow==11.1.0
+pytesseract==0.3.13
+python-dotenv==1.0.1
+httpx==0.28.1
+aiofiles==24.1.0

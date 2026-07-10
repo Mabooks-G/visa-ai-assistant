@@ -1,0 +1,32 @@
+{
+    "visa_type": "south_africa_work",
+    "country": "South Africa",
+    "visa_category": "Work",
+    "description": "South Africa Work Visa (General Work Visa)",
+    "processing_time": "4-8 weeks",
+    "required_documents": [
+        "passport",
+        "employment_letter",
+        "bank_statement",
+        "medical_report"
+    ],
+    "optional_documents": [
+        "proof_of_address",
+        "qualification_certificate",
+        "travel_history",
+        "id_card"
+    ],
+    "financial_requirements": {
+        "min_balance": 5000,
+        "currency": "ZAR",
+        "notes": "Sufficient funds for duration of stay"
+    },
+    "eligibility_criteria": [
+        "Valid job offer from South African employer",
+        "Proof that position cannot be filled locally",
+        "Relevant qualifications and experience",
+        "Valid passport with sufficient blank pages",
+        "Medical certificate",
+        "Police clearance certificate"
+    ]
+}

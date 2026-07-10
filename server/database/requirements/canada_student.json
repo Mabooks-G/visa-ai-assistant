@@ -1,0 +1,30 @@
+{
+    "visa_type": "canada_student",
+    "country": "Canada",
+    "visa_category": "Student",
+    "description": "Canada Student Visa (Study Permit)",
+    "processing_time": "2-4 months",
+    "required_documents": [
+        "passport",
+        "acceptance_letter",
+        "academic_transcript",
+        "bank_statement"
+    ],
+    "optional_documents": [
+        "health_insurance",
+        "proof_of_address",
+        "language_proficiency"
+    ],
+    "financial_requirements": {
+        "min_balance": 20635,
+        "currency": "CAD",
+        "notes": "Tuition plus living costs for first year"
+    },
+    "eligibility_criteria": [
+        "Acceptance letter from Designated Learning Institution (DLI)",
+        "Proof of sufficient funds",
+        "Clean criminal record",
+        "Medical examination if required",
+        "Intent to leave Canada after studies"
+    ]
+}
