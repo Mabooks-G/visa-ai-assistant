@@ -42,8 +42,8 @@ export default function AdminDashboard() {
   const loadApplications = async () => {
     try {
       const data = await adminListApplications()
-      if (data) {
-        const apps = Array.isArray(data) ? data : []
+      // Backend returns { applications: [...] }, unwrap it
+      const apps = data?.applications || (Array.isArray(data) ? data : [])
         setApplications(apps)
         setFiltered(apps)
         setStats({
@@ -52,7 +52,6 @@ export default function AdminDashboard() {
           verified: apps.filter(a => a.status === 'verified').length,
           rejected: apps.filter(a => a.status === 'rejected').length,
         })
-      }
     } catch (err) {
       console.error('Failed to load applications:', err)
     }

@@ -51,10 +51,14 @@ async def health_check():
 from backend.routes import users as user_routes
 from backend.routes import applications as app_routes
 from backend.routes import analysis as analysis_routes
+from backend.routes import admin as admin_routes
+from backend.routes import queries as queries_routes
 
 app.include_router(user_routes.router)
 app.include_router(app_routes.router)
 app.include_router(analysis_routes.router)
+app.include_router(admin_routes.router)
+app.include_router(queries_routes.router)
 
 
 if __name__ == '__main__':
